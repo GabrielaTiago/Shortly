@@ -4,6 +4,6 @@ import validateToken from '../middlewares/validateToken.js';
 
 const userRouter = Router();
 
-userRouter.get('/me', validateToken, userController.getUserData);
+userRouter.get('/me', validateToken, userController.getUserUrls);
 
 export default userRouter;
