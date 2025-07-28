@@ -1,11 +1,17 @@
 import { connection } from '../database/postgres.js';
 
-async function checksIfUserExits(userId) {
-  return connection.query('SELECT * FROM users WHERE id = $1', [userId]);
+async function getUserById(userId) {
+  const user = await connection.query('SELECT * FROM users WHERE id = $1', [userId]);
+  return user;
 }
 
-async function userUrls(userId) {
-  return connection.query(
+async function getUserByEmail(email) {
+  const user = await connection.query('SELECT * FROM users WHERE email = $1', [email]);
+  return user;
+}
+
+async function getUserUrls(userId) {
+  return await connection.query(
     `SELECT 
               us.id,
               name,
@@ -26,4 +32,34 @@ async function userUrls(userId) {
   );
 }
 
-export { checksIfUserExits, userUrls };
+async function createUser(name, email, password) {
+  await connection.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3)', [name, email, password]);
+}
+
+async function getTopRankingUsers() {
+  const result = await connection.query(
+    `
+      SELECT 
+        u.id,
+        u.name,
+        COUNT(l.id) AS "linksCount",
+        COALESCE(SUM(l."visitCount"), 0)::INTEGER AS "visitCount"
+      FROM users u
+      LEFT JOIN urls l ON u.id = l."userId"
+      GROUP BY u.id
+      ORDER BY "visitCount" DESC, "linksCount" DESC
+      LIMIT 10;
+    `
+  );
+  return result.rows;
+}
+
+const userRepository = {
+  getUserByEmail,
+  getUserById,
+  getUserUrls,
+  createUser,
+  getTopRankingUsers,
+};
+
+export default userRepository;
