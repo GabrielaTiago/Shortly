@@ -1,7 +1,9 @@
 import { checksIfEmailExists, signIn } from '../repositories/authRepository.js';
+
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+
 dotenv.config();
 
 async function signInUsers(req, res) {
@@ -51,4 +53,9 @@ async function signUpUsers(req, res) {
   }
 }
 
-export { signInUsers, signUpUsers };
+const authController = {
+  signInUsers,
+  signUpUsers,
+};
+
+export default authController;

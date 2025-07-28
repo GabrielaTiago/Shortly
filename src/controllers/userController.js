@@ -17,4 +17,8 @@ async function getUserData(req, res) {
   }
 }
 
-export { getUserData };
+const userController = {
+  getUserData,
+};
+
+export default userController;

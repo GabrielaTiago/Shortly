@@ -86,4 +86,11 @@ async function deleteShortUrl(req, res) {
   }
 }
 
-export { createShortUrl, getUrlsById, redirectToShortUrl, deleteShortUrl };
+const urlsController = {
+  createShortUrl,
+  getUrlsById,
+  redirectToShortUrl,
+  deleteShortUrl,
+};
+
+export default urlsController;

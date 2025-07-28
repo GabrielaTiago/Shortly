@@ -11,4 +11,8 @@ async function rankingViews(req, res) {
   }
 }
 
-export { rankingViews };
+const rankingController = {
+  rankingViews,
+};
+
+export default rankingController;
