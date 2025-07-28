@@ -1,24 +1,19 @@
-import { checksIfUserExits, userUrls } from '../repositories/userRepository.js';
+import userService from '../services/userService.js';
 
-async function getUserData(req, res) {
+async function getUserUrls(req, res) {
   const userId = res.locals.id;
+  const result = await userService.getUserUrls(userId);
+  res.status(200).send(result);
+}
 
-  try {
-    const { rowCount } = await checksIfUserExits(userId);
-
-    if (rowCount === 0) return res.sendStatus(404);
-
-    const { rows: userInfo } = await userUrls(userId);
-
-    res.status(200).send(userInfo);
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
-  }
+async function getTopRankingUsers(req, res) {
+  const ranking = await userService.getTopRankingUsers();
+  res.status(200).send(ranking);
 }
 
 const userController = {
-  getUserData,
+  getUserUrls,
+  getTopRankingUsers,
 };
 
 export default userController;
