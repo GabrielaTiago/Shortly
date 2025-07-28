@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import urlsController from '../controllers/urlController.js';
 import validateSchema from '../middlewares/validateSchema.js';
-import { validateToken } from '../middlewares/validateToken.js';
+import validateToken from '../middlewares/validateToken.js';
 
 const urlsRouter = Router();
 
