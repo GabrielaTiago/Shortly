@@ -1,0 +1,39 @@
+services:
+  shortly-db:
+    container_name: shortly-db
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  shortly-api:
+    container_name: shortly-api
+    build:
+      context: .
+      args:
+        - PORT=${PORT}
+    env_file:
+      - .env
+    ports:
+      - '${PORT}:${PORT}'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      shortly-db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
