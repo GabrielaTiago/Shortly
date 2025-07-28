@@ -1,4 +1,4 @@
-import { connection } from "../database/postgres.js";
+import { connection } from '../database/postgres.js';
 
 async function rankingUsers() {
   return connection.query(

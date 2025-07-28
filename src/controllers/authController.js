@@ -1,7 +1,7 @@
-import { checksIfEmailExists, signIn } from "../repositories/authRepository.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import { checksIfEmailExists, signIn } from '../repositories/authRepository.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 dotenv.config();
 
 async function signInUsers(req, res) {
@@ -9,23 +9,22 @@ async function signInUsers(req, res) {
 
   try {
     const { rows: user, rowCount } = await checksIfEmailExists(email);
-    
+
     if (rowCount === 0) return res.sendStatus(404);
-    
+
     const id = user[0].id;
     const validEmail = user[0].email;
     const validPassword = bcrypt.compareSync(password, user[0].password);
 
     if (validEmail && validPassword) {
-      const token = jwt.sign({ id, email, password }, process.env.JWT_KEY, { expiresIn: "1d" });
+      const token = jwt.sign({ id, email, password }, process.env.JWT_KEY, { expiresIn: '1d' });
 
       res.status(200).send({
-        message: "Authentication Success",
-        token: token
+        message: 'Authentication Success',
+        token: token,
       });
-
     } else {
-        res.status(401).send("Authentication Failure");
+      res.status(401).send('Authentication Failure');
     }
   } catch (error) {
     console.error(error);
@@ -46,7 +45,6 @@ async function signUpUsers(req, res) {
     await signIn(name, email, encryptedPassword);
 
     res.sendStatus(201);
-
   } catch (error) {
     console.error(error);
     res.sendStatus(500);

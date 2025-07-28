@@ -1,4 +1,4 @@
-import { signUpSchema } from "../schemas/authSchema.js";
+import { signUpSchema } from '../schemas/authSchema.js';
 
 function signUpMiddleware(req, res, next) {
   const validation = signUpSchema.validate(req.body, { abortEarly: true });

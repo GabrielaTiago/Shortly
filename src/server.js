@@ -1,10 +1,10 @@
-import express, { json } from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import { authRoutes } from "./routes/authRoutes.js";
-import { urlsRoutes } from "./routes/urlRoutes.js";
-import { userRoutes } from "./routes/usersRoutes.js";
-import { rankingRoutes } from "./routes/rankingRoutes.js";
+import express, { json } from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { authRoutes } from './routes/authRoutes.js';
+import { urlsRoutes } from './routes/urlRoutes.js';
+import { userRoutes } from './routes/usersRoutes.js';
+import { rankingRoutes } from './routes/rankingRoutes.js';
 dotenv.config();
 
 const server = express();

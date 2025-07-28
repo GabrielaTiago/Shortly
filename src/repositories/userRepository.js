@@ -1,7 +1,7 @@
-import { connection } from "../database/postgres.js";
+import { connection } from '../database/postgres.js';
 
-async function checksIfUserExits(userId){
-    return connection.query("SELECT * FROM users WHERE id = $1", [userId]);
+async function checksIfUserExits(userId) {
+  return connection.query('SELECT * FROM users WHERE id = $1', [userId]);
 }
 
 async function userUrls(userId) {

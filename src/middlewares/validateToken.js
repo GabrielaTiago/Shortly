@@ -1,10 +1,10 @@
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 dotenv.config();
 
 async function validateToken(req, res, next) {
   const { authorization } = req.headers;
-  const token = authorization?.replace("Bearer ", "");
+  const token = authorization?.replace('Bearer ', '');
 
   try {
     const validToken = jwt.verify(token, process.env.JWT_KEY);
@@ -12,10 +12,9 @@ async function validateToken(req, res, next) {
     res.locals.id = validToken.id;
 
     next();
-
   } catch (error) {
     console.error(error);
-    res.status(401).send("Authentication Failure");
+    res.status(401).send('Authentication Failure');
   }
 }
 
