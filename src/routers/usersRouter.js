@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { getUserData } from '../controllers/userController.js';
 import { validateToken } from '../middlewares/validateToken.js';
 
-const userRoutes = Router();
+const userRouter = Router();
 
-userRoutes.get('/users/me', validateToken, getUserData);
+userRouter.get('/me', validateToken, getUserData);
 
-export { userRoutes };
+export default userRouter;
