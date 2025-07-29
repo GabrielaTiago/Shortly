@@ -3,13 +3,422 @@
     "info": {
         "title": "Shortly API",
         "description": "API para o encurtador de URLs Shortly.",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "contact": {
+            "name": "Gabriela Tiago",
+            "email": "gabrielatiagodearaujo@outlook.com"
+        }
     },
     "servers": [
         {
-            "url": "http://localhost:4004",
-            "description": "Servidor de Desenvolvimento"
+            "url": "http://localhost:4000",
+            "description": "API de Desenvolvimento"
         }
     ],
-    "paths": {}
+    "paths": {
+        "/signup": {
+            "post": {
+                "summary": "Cria um novo usuário",
+                "description": "Endpoint para criar um novo usuário no sistema.",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 50,
+                                        "description": "Nome do usuário, deve ter entre 1 e 50 caracteres"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "description": "Deve ser um email válido"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 4,
+                                        "maxLength": 16,
+                                        "description": "Senha deve ter entre 4 e 16 caracteres"
+                                    },
+                                    "confirmPassword": {
+                                        "type": "string",
+                                        "minLength": 4,
+                                        "maxLength": 16,
+                                        "description": "Deve ser igual ao campo 'password'"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "confirmPassword"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado com sucesso"
+                    },
+                    "409": {
+                        "description": "Email já cadastrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação: body não enviado, parâmetros ausentes ou inválidos."
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/signin": {
+            "post": {
+                "summary": "Realiza o login do usuário",
+                "description": "Endpoint para autenticar um usuário e gerar um token JWT.",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 4,
+                                        "maxLength": 16
+                                    }
+                                },
+                                "required": [
+                                    "email",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login realizado com sucesso"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Email ou senha inválidos"
+                    },
+                    "422": {
+                        "description": "Erro de validação: body não enviado, parâmetros ausentes ou inválidos."
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/urls/shorten": {
+            "post": {
+                "summary": "Encurta uma URL",
+                "description": "Endpoint para encurtar uma URL.",
+                "tags": [
+                    "URLs"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "format": "uri",
+                                        "description": "URL a ser encurtada, deve ser uma URL válida"
+                                    }
+                                },
+                                "required": [
+                                    "url"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "URL encurtada com sucesso"
+                    },
+                    "401": {
+                        "description": "Token de autenticação inválido ou ausente"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação: body não enviado, parâmetros ausentes ou inválidos."
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/urls/open/{shortUrl}": {
+            "get": {
+                "summary": "Redireciona para a URL original",
+                "description": "Endpoint para redirecionar o usuário para a URL original a partir de uma URL encurtada.",
+                "tags": [
+                    "URLs"
+                ],
+                "parameters": [
+                    {
+                        "name": "shortUrl",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "URL encurtada"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Redireciona para a URL original"
+                    },
+                    "404": {
+                        "description": "URL encurtada não encontrada"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/urls/{id}": {
+            "get": {
+                "summary": "Obtém informações de uma URL encurtada",
+                "description": "Endpoint para obter informações sobre uma URL encurtada.",
+                "tags": [
+                    "URLs"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID da URL encurtada"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Informações da URL obtidas com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/URL"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "URL encurtada não encontrada"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Remove uma URL encurtada",
+                "description": "Endpoint para remover uma URL encurtada.",
+                "tags": [
+                    "URLs"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID da URL encurtada"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "URL removida com sucesso"
+                    },
+                    "401": {
+                        "description": "Token de autenticação inválido ou ausente. Usuário não autorizado a remover esta URL."
+                    },
+                    "404": {
+                        "description": "URL encurtada não encontrada"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/users/me": {
+            "get": {
+                "summary": "Obtém as URLs do usuário autenticado",
+                "description": "Endpoint para obter as URLs pertencentes do usuário autenticado.",
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Informações do usuário obtidas com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "description": "ID do usuário"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "description": "Nome do usuário"
+                                        },
+                                        "visitCount": {
+                                            "type": "integer",
+                                            "description": "Soma total de visitas de todos os links"
+                                        },
+                                        "shortenedUrls": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/URL"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token de autenticação inválido ou ausente"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/ranking": {
+            "get": {
+                "summary": "Obtém o ranking de URLs mais visitadas",
+                "description": "Endpoint para obter o ranking das URLs mais visitadas, limitada a 10 urls, ordenada pela quantidade de visitas.",
+                "tags": [
+                    "Ranking"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ranking obtido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/URL"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "URL": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID da URL encurtada"
+                    },
+                    "shortUrl": {
+                        "type": "string",
+                        "description": "URL encurtada"
+                    },
+                    "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL original"
+                    },
+                    "visitCount": {
+                        "type": "integer",
+                        "description": "Número de vezes que a URL foi visitada"
+                    }
+                },
+                "required": [
+                    "id",
+                    "shortUrl",
+                    "url",
+                    "visitCount"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Token JWT para autenticação"
+            }
+        }
+    }
 }
