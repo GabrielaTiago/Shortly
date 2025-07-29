@@ -1,4 +1,4 @@
-import { nanoid } from 'nanoid/non-secure';
+import generateShortUrl from './shortUrlGenerator.js';
 import urlRepository from '../repositories/urlRepository.js';
 import userService from './userService.js';
 
@@ -12,9 +12,9 @@ async function createShortUrl(url, userId) {
 
 async function getUrlById(urlId) {
   let { rows: url, rowCount } = await urlRepository.getUrlById(urlId);
-    validateUrlExists(rowCount);
-    delete url[0].userId;
-    return url[0];
+  validateUrlExists(rowCount);
+  delete url[0].userId;
+  return url[0];
 }
 
 async function redirectToShortUrl(shortUrl) {
@@ -40,10 +40,6 @@ async function deleteShortUrl(urlId, userId) {
   await urlRepository.deleteShortUrl(urlId);
 }
 
-function generateShortUrl() {
-  return nanoid(10);
-}
-
 function validateUrlExists(rowCount) {
   if (rowCount === 0) {
     const error = { type: 'not_found', message: 'URL not found' };
@@ -57,7 +53,6 @@ const urlService = {
   redirectToShortUrl,
   updateVisitCount,
   deleteShortUrl,
-  generateShortUrl,
   validateUrlExists,
 };
 
