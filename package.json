@@ -10,9 +10,13 @@
     "docker:stop": "docker-compose stop",
     "docker:down": "docker-compose down -v",
     "docker:destroy": "docker-compose down -v --rmi all",
+    "docker:test": "docker-compose run --rm shortly-api npm test",
+    "docker:test:watch": "docker-compose run --rm shortly-api npm run test:watch",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --ext .js,.ts --fix",
-    "format": "prettier --write '**/*.{ts,js,json}'"
+    "format": "prettier --write '**/*.{ts,js,json}'",
+    "test": "jest --coverage --verbose",
+    "test:watch": "jest --coverage --verbose --watchAll"
   },
   "keywords": [],
   "author": "",
