@@ -55,7 +55,10 @@ const urlService = {
   createShortUrl,
   getUrlById,
   redirectToShortUrl,
+  updateVisitCount,
   deleteShortUrl,
+  generateShortUrl,
+  validateUrlExists,
 };
 
 export default urlService;

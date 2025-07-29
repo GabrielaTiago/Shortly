@@ -57,6 +57,6 @@ function generateToken(user) {
   return jwt.sign({ id, email }, process.env.JWT_KEY, { expiresIn: '1d' });
 }
 
-const authService = { signInUsers, signUpUsers };
+const authService = { signInUsers, signUpUsers, checkUserExists, encrypstsPassword, validatePassword, generateToken };
 
 export default authService;
