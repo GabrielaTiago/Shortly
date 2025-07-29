@@ -8,16 +8,24 @@ export default [
 
   {
     files: ['**/*.js'],
-
+    ...airbnb,
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
         ...globals.node,
+        ...globals.jest,
       },
     },
     rules: {
-      ...airbnb.rules,
+      'import/extensions': 'off',
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+    },
+  },
+  {
+    files: ['**/*.test.js', '**/tests/**'],
+    rules: {
+      'import/no-extraneous-dependencies': 'off',
     },
   },
   prettier,
